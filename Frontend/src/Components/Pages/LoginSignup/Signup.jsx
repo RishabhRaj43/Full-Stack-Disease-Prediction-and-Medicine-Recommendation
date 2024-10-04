@@ -4,6 +4,7 @@ import useProfile from "../../../Zustand/Profile";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import "../../Ui/Checkbox.css";
+import axios from "axios";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -23,13 +24,31 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== confirmPassword) {
       toast.error("Passwords do not match");
     }
-    console.log(formData);
-    console.log(confirmPassword);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/signup",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      login(res.data.token);
+      toast.success("User Created");
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+        gender: "",
+      });
+    } catch (error) {
+      console.log(error.response);
+      toast.error("Internal Server Error");
+    }
   };
 
   useEffect(() => {
@@ -128,7 +147,7 @@ const Signup = () => {
                     onChange={(e) => {
                       setConfirmPassword(e.target.value);
                     }}
-                    className={`p-2 w-full border border-gray-500 rounded-md focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    className={`p-2 w-full border  rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                       formData.password === confirmPassword
                         ? "focus:ring-green-700"
                         : "focus:ring-red-700"
@@ -137,7 +156,7 @@ const Signup = () => {
                   <button
                     type="button"
                     onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                    className="absolute inset-y-0 right-3 flex items-center focus:outline-none"
+                    className={`absolute inset-y-0 bottom-5 right-3 flex items-center focus:outline-none`}
                   >
                     {isPasswordVisible ? (
                       <img
@@ -154,11 +173,16 @@ const Signup = () => {
                     )}
                   </button>
                   {/** Tooltip */}
-                  {formData.password !== confirmPassword && confirmPassword.length>0 && (
-                    <div className="text-red-500 text-xs">
-                      Passwords do not match!!
-                    </div>
-                  )}
+
+                  <div
+                    className={`text-red-500 text-xs mt-2 transition-opacity duration-300 ease-in-out ${
+                      formData.password === confirmPassword
+                        ? "opacity-0"
+                        : "opacity-100"
+                    }`}
+                  >
+                    Passwords do not match!!
+                  </div>
                 </div>
               </div>
 

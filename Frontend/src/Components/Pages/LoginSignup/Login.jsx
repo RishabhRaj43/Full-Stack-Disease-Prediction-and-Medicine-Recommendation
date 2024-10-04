@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useProfile from "../../../Zustand/Profile";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const Login = () => {
   const { user, login } = useProfile();
@@ -17,9 +19,27 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/login",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      login(res.data.token);
+      toast.success("User Logged In");
+      setFormData({
+        email: "",
+        password: "",
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error.response);
+      toast.error(error.response.data);
+    }
   };
 
   useEffect(() => {
@@ -70,25 +90,24 @@ const Login = () => {
                     className="p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 pr-10 z-10"
                   />
                   <button
-  type="button"
-  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-  className="absolute right-2 top-1/2 transform -translate-y-1/2 focus:outline-none z-10"
->
-  {isPasswordVisible ? (
-    <img
-      className="w-5 h-5"
-      src="https://cdn-icons-png.flaticon.com/512/30/30890.png"
-      alt="Toggle visibility"
-    />
-  ) : (
-    <img
-      className="w-5 h-5"
-      src="https://cdn-icons-png.flaticon.com/512/31/31607.png"
-      alt="Toggle visibility"
-    />
-  )}
-</button>
-
+                    type="button"
+                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 focus:outline-none z-10"
+                  >
+                    {isPasswordVisible ? (
+                      <img
+                        className="w-5 h-5"
+                        src="https://cdn-icons-png.flaticon.com/512/30/30890.png"
+                        alt="Toggle visibility"
+                      />
+                    ) : (
+                      <img
+                        className="w-5 h-5"
+                        src="https://cdn-icons-png.flaticon.com/512/31/31607.png"
+                        alt="Toggle visibility"
+                      />
+                    )}
+                  </button>
                 </div>
               </div>
               <div>

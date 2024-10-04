@@ -19,7 +19,7 @@ const Home3 = () => {
   };
 
   return (
-    <div className="px-24 py-3 mb-9">
+    <div className="px-24 py-3 mb-32">
       <h1 className="text-7xl text-center py-7 font-bold mb-4">
         FAQs
       </h1>
