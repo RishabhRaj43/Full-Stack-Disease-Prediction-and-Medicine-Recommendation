@@ -30,15 +30,10 @@ const Signup = () => {
       toast.error("Passwords do not match");
     }
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/signup",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-      login(res.data.token);
-      toast.success("User Created");
+      await axios.post("http://localhost:5000/api/signup", formData, {
+        withCredentials: true,
+      });
+      navigate(`/signup/verify/${formData.email}`);
       setFormData({
         username: "",
         email: "",
@@ -47,7 +42,7 @@ const Signup = () => {
       });
     } catch (error) {
       console.log(error.response);
-      toast.error("Internal Server Error");
+      toast.error(error.response.data.message);
     }
   };
 
@@ -75,6 +70,7 @@ const Signup = () => {
             <div className="mt-4 flex flex-col lg:flex-row items-center justify-between">
               <div className="w-full lg:w-1/2 mb-2 lg:mb-0"></div>
             </div>
+
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
@@ -241,6 +237,7 @@ const Signup = () => {
                 </button>
               </div>
             </form>
+
             <div className="mt-4 text-sm text-gray-600 text-center">
               <p>
                 Already have an account?{" "}

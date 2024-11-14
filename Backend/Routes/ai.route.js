@@ -12,7 +12,6 @@ aiRouter.post("/chat", async (req, res) => {
       model: "gemini-pro",
     });
 
-    // const prompt = "";
     const result = await geminiModel.generateContent(message);
     const response = result.response;
 
