@@ -1,0 +1,29 @@
+/* Style the pagination dots */
+.slick-dots {
+  bottom: 15px; /* Adjust distance from the bottom */
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.slick-dots li {
+  margin: 0 5px; /* Add space between the dots */
+}
+
+.slick-dots li button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.slick-dots li button:before {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7); /* Inactive dot color */
+  transition: color 0.3s ease;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #ffcc00; /* Active dot color */
+}

@@ -3,10 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
-import router from "./Routes/auth.route.js";
+import userRouter from "./Routes/User/UserRoute.js";
 import connectDB from "./MongoDB/Connect.js";
-import disease from "./Routes/disease.route.js";
-import aiRouter from "./Routes/ai.route.js";
+import aiRouter from "./Routes/User/ai.route.js";
+
+import doctorMainRoute from "./Routes/Doctor/DoctorMain.route.js";
 
 dotenv.config();
 
@@ -17,15 +18,15 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:3000",
-    credentials: true, 
+    credentials: true,
   })
 );
 
 const port = process.env.PORT || 3000;
 
-app.use("/api",router)
-app.use("/disease",disease)
-app.use("/ai",aiRouter);
+app.use("/api/user", userRouter);
+app.use("/ai", aiRouter);
+app.use("/api/doctor", doctorMainRoute);
 
 app.listen(port, () => {
   connectDB();
