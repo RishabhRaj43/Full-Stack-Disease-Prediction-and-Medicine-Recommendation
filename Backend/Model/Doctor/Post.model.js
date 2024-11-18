@@ -1,9 +1,10 @@
-import moongoose from "mongoose";
+import mongoose from "mongoose";
 
-const postSchema = new moongoose.Schema(
+const postSchema = new mongoose.Schema(
   {
     doctorId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Doctor",
       required: true,
     },
     title: {
@@ -14,13 +15,10 @@ const postSchema = new moongoose.Schema(
       type: String,
       required: true,
     },
-    likes: {
-      type: Number,
-      default: 0,
-    },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", default: [] }],
   },
   { timestamps: true }
 );
 
-const DoctorPost = moongoose.model("DoctorPost", postSchema);
+const DoctorPost = mongoose.model("DoctorPost", postSchema);
 export default DoctorPost;

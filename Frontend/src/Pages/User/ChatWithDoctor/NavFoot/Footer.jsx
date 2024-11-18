@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="relative bg-blueGray-200 bottom-0 pt-8 pb-6 bg-[#6A9AB0] ">
+    <div className=" bg-blueGray-200 bottom-0 pt-8 pb-6 bg-[#6A9AB0] ">
       <div className="container mx-auto px-4 cursor-default">
         <div className="flex flex-wrap text-left lg:text-left">
           <div className="w-full lg:w-6/12 px-4">
@@ -108,7 +108,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 

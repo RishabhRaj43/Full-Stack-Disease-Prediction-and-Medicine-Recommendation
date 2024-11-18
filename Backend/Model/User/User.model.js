@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema(
       default: "Prefer not to say",
       enum: ["male", "female", "Prefer not to say"],
     },
+    profilePhoto: {
+      type: String,
+      default:
+        "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper.png",
+    },
     isVerified: {
       type: Boolean,
       default: false,
@@ -34,7 +39,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Appointment" }],
+    likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    appointments: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Appointment" },
+    ],
     favoriteDoctors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Doctor" }],
   },
   {

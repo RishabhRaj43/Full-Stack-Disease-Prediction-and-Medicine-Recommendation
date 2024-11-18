@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Headroom from "react-headroom";
+import toast from "react-hot-toast";
+import { getCurrentUser } from "../../../../Services/User/Auth/Auth";
 
 const Navbar = () => {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchCurrentUserDetails = async () => {
+      try {
+        const res = await getCurrentUser();
+        setUser(res.data.user);
+      } catch (error) {
+        console.log("Error in fetchCurrentUserDetails: ", error);
+        toast.error(error.response.data.message);
+      }
+    };
+
+    fetchCurrentUserDetails();
+  }, []);
   return (
     <Headroom>
       <div className="z-50 h-16 bg-[#00A4CC] flex justify-between items-center sticky top-0">
@@ -14,7 +30,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="flex px-6">
+        <div className="flex px-6 items-center">
           <ul className="flex space-x-4 text-xl items-center">
             <Link to={""} className="hover:text-[#FFF7D1]">
               Home
@@ -25,10 +41,8 @@ const Navbar = () => {
             <Link to={"appointments"} className="hover:text-[#FFF7D1]">
               Appointments
             </Link>
-            <Link to={"userInfo"}>
-              <button className="rounded-full flex items-center justify-center  p-4 h-9 bg-cyan-300 hover:bg-cyan-400">
-                <h1 className="p-2 ">Profile</h1>
-              </button>
+            <Link to={"user-info"}>
+              <img src={user?.profilePhoto} className="w-12 h-12" alt="" />
             </Link>
           </ul>
         </div>

@@ -5,9 +5,12 @@ const Home3 = () => {
   const contentRefs = useRef([]);
 
   const accordionData = {
-    "accordion-1": "This is the content of accordion 1.",
-    "accordion-2": "This is the content of accordion 2.",
-    "How do we Predict?": "This is the content of accordion 3.",
+    "How Accurate The Predictions, Recommendations and Medications Are?":
+      "Our system utilizes advanced algorithms and expert input to provide the most accurate recommendations possible. However, results may vary depending on individual cases.",
+    "How Reliable Are The Doctors Here?":
+      "All our doctors are highly qualified, certified professionals with years of experience in their respective fields. Your health and trust are our priorities.",
+    "Are Doctors Available 24/7?":
+      "While our doctors aim to provide the best care, their availability is subject to schedules and emergencies. However, we ensure round-the-clock support for urgent queries.",
   };
 
   const handleAccordionToggle = (index) => {
@@ -20,9 +23,7 @@ const Home3 = () => {
 
   return (
     <div className="px-24 py-3 mb-32">
-      <h1 className="text-7xl text-center py-7 font-bold mb-4">
-        FAQs
-      </h1>
+      <h1 className="text-7xl text-center py-7 font-bold mb-4">FAQs</h1>
       <div className="hs-accordion-group bg-E3FDFD">
         {Object.keys(accordionData).map((key, index) => {
           const isActive = activeAccordion === index;

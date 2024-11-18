@@ -3,13 +3,15 @@ import { Route, Routes } from "react-router-dom";
 import Home from "../../../Pages/User/ChatWithDoctor/Home/Home";
 import Navbar from "../../../Pages/User/ChatWithDoctor/NavFoot/Navbar";
 import Footer from "../../../Pages/User/ChatWithDoctor/NavFoot/Footer";
+import MainCurrUserInfo from "../../../Pages/User/ChatWithDoctor/CurrUserInfo/MainCurrUserInfo";
 
 const DocManagementRoute = () => {
   return (
     <>
-    <Navbar />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/user-info" element={<MainCurrUserInfo />} />
       </Routes>
       <Footer />
     </>

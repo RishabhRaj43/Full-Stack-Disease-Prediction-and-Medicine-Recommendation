@@ -24,6 +24,7 @@ app.use(
 
 const port = process.env.PORT || 3000;
 
+
 app.use("/api/user", userRouter);
 app.use("/ai", aiRouter);
 app.use("/api/doctor", doctorMainRoute);

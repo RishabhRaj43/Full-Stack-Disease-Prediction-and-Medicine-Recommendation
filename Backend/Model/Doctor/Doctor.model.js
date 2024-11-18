@@ -38,14 +38,12 @@ const doctorSchema = new mongoose.Schema(
       type: [String],
       required: true,
     },
-    totalRating: {
-      type: Number,
-      default: 0,
-    },
-    rating: {
-      type: Number,
-      default: 0,
-    },
+    likedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     experience: {
       type: String,
       required: true,
@@ -53,6 +51,10 @@ const doctorSchema = new mongoose.Schema(
     fees: {
       type: Number,
       required: true,
+    },
+    profilePhoto: {
+      type: String,
+      default: "https://www.pngarts.com/files/3/Avatar-PNG-Download-Image.png",
     },
     appointments: [
       {

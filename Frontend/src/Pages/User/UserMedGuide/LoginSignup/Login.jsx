@@ -31,8 +31,8 @@ const Login = () => {
       });
       navigate("/user");
     } catch (error) {
-      console.log(error.response);
-      toast.error(error.response.data);
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 

@@ -14,7 +14,9 @@ const UserRoute = () => {
   return (
     <>
       {location.pathname.startsWith("/user") &&
-        !auth.some((path) => location.pathname.startsWith(`/user/auth${path}`)) &&
+        !auth.some((path) =>
+          location.pathname.startsWith(`/user/auth${path}`)
+        ) &&
         !features.some((path) =>
           location.pathname.startsWith(`/user/features${path}`)
         ) && <ChatComponent />}

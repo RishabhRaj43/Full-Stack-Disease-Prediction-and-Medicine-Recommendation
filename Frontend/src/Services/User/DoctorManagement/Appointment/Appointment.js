@@ -1,4 +1,4 @@
-import {api} from "../../../api.js";
+import { api } from "../../../api.js";
 
 export const getAllAppointments = async () => {
   try {
@@ -8,9 +8,9 @@ export const getAllAppointments = async () => {
         withCredentials: true,
       }
     );
-    return response;
+    return { res: response, userId: response.data.userId };
   } catch (error) {
-    console.log("Get All Appointments Error: ", error);
+    throw error;
   }
 };
 
@@ -25,7 +25,7 @@ export const createAppointment = async (formData) => {
     );
     return response;
   } catch (error) {
-    console.log("Create Appointment Error: ", error);
+    throw error;
   }
 };
 
@@ -40,6 +40,6 @@ export const cancelAppointment = async (formData) => {
     );
     return response;
   } catch (error) {
-    console.log("Cancel Appointment Error: ", error);
+    throw error;
   }
 };

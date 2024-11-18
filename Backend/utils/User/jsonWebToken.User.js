@@ -11,6 +11,8 @@ const jsonSetToken = (userid, res) => {
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
   });
+  console.log("Res Cookie: ", res.cookie);
+  
 
   return token;
 };

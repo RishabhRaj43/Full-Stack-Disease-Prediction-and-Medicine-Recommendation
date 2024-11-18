@@ -9,6 +9,15 @@ const generateVerificationCode = () => {
 
 const tempUsers = {};
 
+export const getCurrentUser = async (req, res) => {
+  try {
+    return res.status(200).json({ user: req.user });
+  } catch (error) {
+    console.log("Error in getCurrentUser: ", error);
+    return res.status(500).json({ message: "Error fetching user data" });
+  }
+};
+
 export const userSignup = async (req, res) => {
   try {
     const { username, email, password, gender, phoneNumber } = req.body;
@@ -134,26 +143,27 @@ export const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json("All fields are required");
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json("User not found");
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json("Wrong password");
+      return res.status(400).json({ message: "Wrong password" });
     }
 
     if (req.cookies.token_user) {
-      return res.status(400).json("Already logged in");
+      return res.status(400).json({ message: "Already logged in" });
     }
 
-    const token = await jsonSetToken(user._id, res);
+    const token = jsonSetToken(user._id, res);
+    console.log("token", token);
 
     return res.status(200).json({ token, message: "User Logged in" });
   } catch (error) {
@@ -169,12 +179,30 @@ export const userLogout = async (req, res) => {
     if (!req.cookies.token_user) {
       // console.log("no token found");
 
-      return res.status(400).json("No token found");
+      return res.status(400).json({ message: "No token found" });
     }
     res.clearCookie("token_user");
     return res.status(200).json({ message: "User Logged out" });
   } catch (error) {
     console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const userUpdate = async (req, res) => {
+  try {
+    const { username, email, password, gender, phoneNumber } = req.body;
+    await User.findByIdAndUpdate(req.user._id, {
+      username,
+      email,
+      password,
+      gender,
+      phoneNumber,
+    });
+
+    return res.status(200).json({ message: "User Updated" });
+  } catch (error) {
+    console.log("Error in userUpdate: " + error);
     return res.status(500).json(error);
   }
 };

@@ -7,7 +7,7 @@ export const getDiseaseInfo = async (disease) => {
     const res = api_python.post("/api/get-disease", { disease });
     return res;
   } catch (error) {
-    console.log("Get Disease Info Error: ", error);
+    throw error;
   }
 };
 
@@ -18,6 +18,6 @@ export const predictDisease = async (checkItems) => {
     const res = api_python.post("/api/predict", checkItems);
     return res;
   } catch (error) {
-    console.log("Predict Disease Error: ", error);
+    throw error;
   }
 };

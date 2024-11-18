@@ -5,6 +5,6 @@ export const chatWithAi = async (message) => {
     const res = await api.post("/ai/chat", { message });    
     return res;
   } catch (error) {
-    console.log("Chat with AI Error: ", error);
+    throw error;
   }
 };

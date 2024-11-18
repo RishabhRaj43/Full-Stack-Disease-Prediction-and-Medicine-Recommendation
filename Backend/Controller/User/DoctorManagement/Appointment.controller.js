@@ -6,7 +6,7 @@ export const getAllAppointments = async (req, res) => {
     const appointments = await Appointment.find({
       patientId: req.user._id,
     }).populate("doctorId");
-    res.status(200).json({ appointments });
+    res.status(200).json({ appointments, userId: req.user._id });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong" });
@@ -16,32 +16,47 @@ export const getAllAppointments = async (req, res) => {
 export const createAppointment = async (req, res) => {
   try {
     const { doctorId, date, time, status } = req.body;
-    console.log("Request Body: ", req.body);
-    
 
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
       return res.status(400).json({ message: "Doctor not found" });
     }
 
-    const appointment = await Appointment.findOne({
+    const [hour, minute] = time.split(":");
+    const providedDateTime = new Date(date);
+    providedDateTime.setHours(hour, minute, 0, 0);
+
+    const conflictingAppointment = await Appointment.findOne({
       doctorId,
-      patientId: req.user._id,
-      date,
-      time,
+      status: { $ne: "cancelled" },
+      $or: [
+        { start: { $lte: providedDateTime }, end: { $gte: providedDateTime } },
+        {
+          start: {
+            $lte: new Date(providedDateTime.getTime() + 2 * 60 * 60 * 1000),
+          },
+          end: {
+            $gte: new Date(providedDateTime.getTime() + 2 * 60 * 60 * 1000),
+          },
+        },
+      ],
     });
-    if (appointment) {
-      return res
-        .status(400)
-        .json({ message: "Appointment already exists", appointment });
+
+    if (conflictingAppointment) {
+      return res.status(400).json({
+        message: "Sorry this time slot is already taken",
+      });
     }
+
+    const endDateTime = new Date(providedDateTime);
+    endDateTime.setHours(endDateTime.getHours() + 2);
 
     const newAppointment = new Appointment({
       doctorId,
       patientId: req.user._id,
-      date,
+      start: providedDateTime,
+      end: endDateTime,
       status,
-      time,
     });
 
     req.user.appointments.push(newAppointment._id);
