@@ -2,12 +2,44 @@ import Doctor from "../../Model/Doctor/Doctor.model.js";
 import bcrypt from "bcryptjs";
 import jsonSetDoctorToken from "../../utils/Doctor/jsonWebTokenDoctor.js";
 import sendEmail from "../../utils/User/SendMail.js";
+import Specialization from "../../Model/Doctor/Specialization.model.js";
 
 const generateVerificationCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
 const tempDoctors = {};
+
+export const getDoctor = async (req, res) => {
+  try {
+    const doctor = await Doctor.findById(req.doctor._id)
+      .populate({
+        path: "appointments",
+        populate: {
+          path: "patientId",
+          select: "username email profilePhoto phoneNumber",
+        },
+        options: {
+          sort: { createdAt: -1 },
+        },
+      })
+      .populate({
+        path: "posts",
+        select: "title content likes createdAt",
+        options: {
+          sort: { createdAt: -1 },
+        },
+      })
+      .select("-likedBy");
+
+    return res
+      .status(200)
+      .json({ doctor, message: "Doctor fetched successfully" });
+  } catch (error) {
+    console.log("Error in getDoctors: ", error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
 
 export const doctorSignup = async (req, res) => {
   try {
@@ -20,6 +52,7 @@ export const doctorSignup = async (req, res) => {
       specialization,
       experience,
       fees,
+      availability,
     } = req.body;
     if (
       !username ||
@@ -29,7 +62,8 @@ export const doctorSignup = async (req, res) => {
       !phoneNumber ||
       !specialization ||
       !experience ||
-      !fees
+      !fees ||
+      !availability
     ) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -57,6 +91,7 @@ export const doctorSignup = async (req, res) => {
 
     tempDoctors[email] = {
       username,
+      availability,
       email,
       password: hashedPassword,
       gender,
@@ -104,6 +139,7 @@ export const verifyDoctor = async (req, res) => {
     const newDoctor = new Doctor({
       username: tempDoctor.username,
       email: tempDoctor.email,
+      availability: tempDoctor.availability,
       password: tempDoctor.password,
       gender: tempDoctor.gender,
       isVerified: true,
@@ -114,10 +150,31 @@ export const verifyDoctor = async (req, res) => {
       experience: tempDoctor.experience,
       fees: tempDoctor.fees,
     });
+
+    const specializationPromises = newDoctor.specialization.map(
+      async (speciality) => {
+        let specialization = await Specialization.findOne({
+          name: speciality.toLowerCase(),
+        });
+
+        if (!specialization) {
+          const newSpecialization = new Specialization({
+            name: speciality.toLowerCase(),
+          });
+          await newSpecialization.save();
+          specialization = newSpecialization;
+        }
+
+        specialization.doctors.push(newDoctor._id);
+        await specialization.save();
+      }
+    );
+
+    await Promise.all(specializationPromises);
+
     await newDoctor.save();
 
     const token = jsonSetDoctorToken(newDoctor._id, res);
-    console.log("token", token);
 
     delete tempDoctors[email];
 
@@ -158,29 +215,26 @@ export const doctorLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json("All fields are required");
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     const doctor = await Doctor.findOne({ email });
 
     if (!doctor) {
-      return res.status(404).json("Doctor not found");
+      return res.status(404).json({ message: "Doctor not found" });
     }
 
     const isMatch = await bcrypt.compare(password, doctor.password);
 
     if (!isMatch) {
-      return res.status(400).json("Wrong password");
+      return res.status(400).json({ message: "Wrong password" });
     }
 
     if (req.cookies.token_doctor) {
-      return res.status(400).json("Already logged in");
+      return res.status(400).json({ message: "Already logged in" });
     }
 
     const token = jsonSetDoctorToken(doctor._id, res);
-
-    doctor.available = true;
-    await doctor.save();
 
     return res.status(200).json({ token, message: "Doctor Logged in" });
   } catch (error) {
@@ -191,15 +245,62 @@ export const doctorLogin = async (req, res) => {
 
 export const doctorLogout = async (req, res) => {
   try {
-    if (!req.cookies.token_doctor) {
-      return res.status(400).json("No token found");
-    }
-    req.doctor.available = false;
-    await req.doctor.save();
     res.clearCookie("token_doctor");
     return res.status(200).json({ message: "Doctor Logged out" });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
+  }
+};
+
+export const updateDoctor = async (req, res) => {
+  try {
+    const updatedData = req.body;
+    const doctor = req.doctor;
+
+    if (req.file) {
+      updatedData.profilePhoto = `${req.protocol}://${req.get("host")}/${
+        req.file.path
+      }`;
+    }
+
+    Object.keys(updatedData).forEach((key) => {
+      doctor[key] = updatedData[key];
+    });
+
+    const specializationPromises = doctor.specialization.map(
+      async (speciality) => {
+        let specialization = await Specialization.findOne({
+          name: speciality.toLowerCase(),
+        });
+
+        if (!specialization) {
+          const newSpecialization = new Specialization({
+            name: speciality.toLowerCase(),
+          });
+          await newSpecialization.save();
+          specialization = newSpecialization;
+        }
+
+        specialization.doctors.push(doctor._id);
+        await specialization.save();
+      }
+    );
+
+    await Promise.all(specializationPromises);
+
+    await doctor.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Doctor information updated successfully",
+      doctor,
+    });
+  } catch (error) {
+    console.error("Error updating doctor:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating doctor information",
+    });
   }
 };

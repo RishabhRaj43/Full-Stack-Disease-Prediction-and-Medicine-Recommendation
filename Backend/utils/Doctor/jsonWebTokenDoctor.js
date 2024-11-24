@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
-const jsonSetDoctorToken = (userid, res) => {
-  const token = jwt.sign({ userid }, process.env.JWT_SECRET_DOCTOR, {
+const jsonSetDoctorToken = (doctorid, res) => {
+  const token = jwt.sign({ doctorid }, process.env.JWT_SECRET_DOCTOR, {
     expiresIn: "15d",
   });
 

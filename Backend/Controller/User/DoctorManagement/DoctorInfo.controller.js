@@ -1,9 +1,40 @@
 import Doctor from "../../../Model/Doctor/Doctor.model.js";
+import Specialization from "../../../Model/Doctor/Specialization.model.js";
 
 export const getMostlikedDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find({}).sort({ likes: -1 }).limit(5);
     return res.status(200).json(doctors);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getAllDoctors = async (req, res) => {
+  try {
+    const { speciality } = req.body;
+    if (!speciality) {
+      const doctors = await Doctor.find({});
+      return res.status(200).json({
+        doctors,
+        userId: req.user._id,
+        message: "There are no Doctors with this speciality",
+      });
+    }
+    const specialization = await Specialization.findOne({
+      name: speciality.toLowerCase(),
+    }).populate("doctors");
+    if(!specialization){
+      return res.status(400).json({
+        message: "There are no Doctors with this speciality",
+        userId: req.user._id,
+      });
+    }
+    
+    return res
+      .status(200)
+      .json({ doctors: specialization.doctors, userId: req.user._id });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);

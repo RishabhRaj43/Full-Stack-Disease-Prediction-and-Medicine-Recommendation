@@ -26,6 +26,10 @@
 - Cancel an appointment - [POST] /api/user/appointment/cancel-appointment
   **cancelAppointment(appointmentId)**
 
+## APPOINTMENT ROUTES FOR DOCTOR ✔️
+- Get all appointments - [GET] /api/doctor/doctor-appointment/get-all-appointments
+  **getAllDoctorAppointments()**
+
 ## POST ROUTES FOR USER ✔️
 
 - Get all posts - [GET] /api/user/doctor-post
@@ -42,6 +46,7 @@
 - Like a Doctor - [POST] /api/user/doctor-info/like-doctor
   **likeDoctor(doctorId)**
 - Unike a Doctor - [POST] /api/user/doctor-info/unlike-doctor
+  **unlikeDoctor(doctorId)**
 
 ## POST ROUTES FOR DOCTOR ✔️
 

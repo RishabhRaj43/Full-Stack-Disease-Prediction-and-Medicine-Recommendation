@@ -1,9 +1,9 @@
 import { api } from "../../../api.js";
 
-export const getAllAppointments = async () => {
+export const getAllAppointments = async (status=null,date) => {
   try {
-    const response = await api.get(
-      "/api/user/appointment/get-all-appointments",
+    const response = await api.post(
+      "/api/user/appointment/get-all-appointments",{status,date},
       {
         withCredentials: true,
       }
@@ -29,11 +29,13 @@ export const createAppointment = async (formData) => {
   }
 };
 
-export const cancelAppointment = async (formData) => {
+export const cancelAppointment = async (appointmentId) => {
   try {
     const response = await api.post(
       "/api/user/appointment/cancel-appointment",
-      formData,
+      {
+        appointmentId,
+      },
       {
         withCredentials: true,
       }

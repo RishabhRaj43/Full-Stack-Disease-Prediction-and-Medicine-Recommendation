@@ -4,11 +4,14 @@ import {
   getCurrentUser,
   updateUser,
 } from "../../../../../Services/User/Auth/Auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 const CurrUserInfo = ({ user, setUser }) => {
   const [editedUser, setEditedUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +32,18 @@ const CurrUserInfo = ({ user, setUser }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await updateUser(editedUser);
+      const formData = new FormData();
+
+      if (image) {
+        formData.append("profilePhoto", editedUser.profilePhoto);
+      }
+
+      formData.append("username", editedUser.username);
+      formData.append("email", editedUser.email);
+      formData.append("phoneNumber", editedUser.phoneNumber);
+      formData.append("gender", editedUser.gender);
+
+      const res = await updateUser(formData);
       toast.success(res.data.message);
       setUser({ ...editedUser });
       setEditedUser(null);
@@ -41,15 +55,56 @@ const CurrUserInfo = ({ user, setUser }) => {
     setLoading(false);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setImage(URL.createObjectURL(file));
+    }
+    setEditedUser({ ...user, profilePhoto: file });
+    setIsEditing(true);
+  };
+
+  const handleImageEdit = () => {
+    document.getElementById("fileInput").click();
+  };
+
   return (
-    <div className="flex justify-center top-0 w-full items-center min-h-screen">
-      <div className="w-full max-w-lg rounded-lg">
-        <h1 className="text-5xl font-bold mb-4 ">
+    <div className="flex flex-col w-full my-4 px-3">
+      <div className="w-full">
+        <h1 className="text-5xl font-bold mb-4">
           {isEditing ? "Edit User Information" : "User Information"}
         </h1>
-        <hr className="border-t-2  border-gray-700 my-4 hover:opacity-100 transition-opacity duration-300" />
 
-        <form className="space-y-4" onSubmit={handleUpdate}>
+        <hr className="border-t-2 border-gray-700 my-4 hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
+      <div className="flex gap-6 justify-between">
+        <div>
+          <div className="relative bg-black cursor-pointer w-56 h-56 rounded-full group">
+            <img
+              src={image || user.profilePhoto}
+              className="w-56 h-56 object-cover transition-all duration-300 opacity-100 group-hover:opacity-70 rounded-full"
+              alt="User Profile"
+            />
+            <div
+              className="absolute top-1/2 left-1/2 text-white text-xl font-bold transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100 p-2 transform -translate-x-1/2 -translate-y-1/2 flex gap-2 items-center"
+              onClick={handleImageEdit}
+            >
+              <h1>Edit</h1>
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </div>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </div>
+        </div>
+
+        <form className="space-y-4 w-full" onSubmit={handleUpdate}>
           {/* Username */}
           <div>
             <label
@@ -131,7 +186,7 @@ const CurrUserInfo = ({ user, setUser }) => {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end items-center mt-6">
+          <div className="flex justify-end items-center mt-6 space-x-4">
             {!isEditing ? (
               <button
                 type="button"
@@ -144,7 +199,7 @@ const CurrUserInfo = ({ user, setUser }) => {
               <>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none mr-2"
+                  className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none"
                   onClick={handleCancel}
                 >
                   Cancel

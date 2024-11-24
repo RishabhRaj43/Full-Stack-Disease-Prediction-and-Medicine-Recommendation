@@ -192,17 +192,32 @@ export const userLogout = async (req, res) => {
 export const userUpdate = async (req, res) => {
   try {
     const { username, email, password, gender, phoneNumber } = req.body;
-    await User.findByIdAndUpdate(req.user._id, {
-      username,
-      email,
-      password,
-      gender,
-      phoneNumber,
-    });
+    const user = req.user;
 
-    return res.status(200).json({ message: "User Updated" });
+    if (req.file) {
+      user.profilePhoto = `${req.protocol}://${req.get("host")}/${
+        req.file.path
+      }`;
+    }
+
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.password = password || user.password;
+    user.gender = gender || user.gender;
+    user.phoneNumber = phoneNumber || user.phoneNumber;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User information updated successfully",
+      user,
+    });
   } catch (error) {
-    console.log("Error in userUpdate: " + error);
-    return res.status(500).json(error);
+    console.error("Error updating user:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating user information",
+    });
   }
 };

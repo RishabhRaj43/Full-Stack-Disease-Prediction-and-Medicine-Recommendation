@@ -7,7 +7,7 @@ import {
 
 const appointmentRoute = express.Router();
 
-appointmentRoute.get("/get-all-appointments", getAllAppointments);
+appointmentRoute.post("/get-all-appointments", getAllAppointments);
 appointmentRoute.post("/create-appointment", createAppointment);
 appointmentRoute.post("/cancel-appointment", cancelAppointment);
 

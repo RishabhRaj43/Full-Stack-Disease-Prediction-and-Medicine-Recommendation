@@ -4,13 +4,10 @@ import CurrInfoGuide from "./CurrInfoGuide";
 import { getCurrentUser } from "../../../../Services/User/Auth/Auth";
 import toast from "react-hot-toast";
 import CurrFavPosts from "./CurrUserInfoGroup/CurrFavPosts";
-import axios from "axios";
 import CurrUserAppointments from "./CurrUserInfoGroup/CurrUserAppointments";
 
 const MainCurrUserInfo = () => {
-  const [selectedTag, setSelectedTag] = useState(
-    localStorage.getItem("tag") || "curr-info"
-  );
+  const [selectedTag, setSelectedTag] = useState("curr-info");
   const [user, setUser] = useState({
     username: "",
     email: "",
@@ -40,7 +37,7 @@ const MainCurrUserInfo = () => {
           selectedTag={selectedTag}
         />
       </div>
-      <div className="w-2/3">
+      <div className="w-full">
         {selectedTag === "curr-info" && (
           <CurrUserInfo user={user} setUser={setUser} />
         )}

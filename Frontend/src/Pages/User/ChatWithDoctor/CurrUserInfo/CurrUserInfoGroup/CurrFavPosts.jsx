@@ -45,7 +45,7 @@ const CurrFavPosts = () => {
   };
 
   return (
-    <div className="spcae-y-2 mt-20 flex flex-col">
+    <div className="spcae-y-2 w-full mt-20 flex flex-col">
       <h1 className="text-5xl mb-4 font-bold">Favourite Posts</h1>
       <hr className="border-t-2  border-gray-700 my-4 hover:opacity-100 transition-opacity duration-300 mr-5" />
       <div className="space-y-4 pr-4">

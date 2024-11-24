@@ -8,7 +8,6 @@ const CurrInfoGuide = ({ setSelectedTag, selectedTag }) => {
           selectedTag === "curr-info" && "bg-cyan-400"
         } font-bold rounded-3xl p-3 cursor-pointer w-full text-center hover:bg-cyan-400`}
         onClick={() => {
-          localStorage.setItem("tag", "curr-info");
           setSelectedTag("curr-info");
         }}
       >
@@ -19,7 +18,6 @@ const CurrInfoGuide = ({ setSelectedTag, selectedTag }) => {
           selectedTag === "fav-posts" && "bg-cyan-400"
         } font-bold rounded-3xl p-3 cursor-pointer w-full text-center hover:bg-cyan-400`}
         onClick={() => {
-          localStorage.setItem("tag", "fav-posts");
           setSelectedTag("fav-posts");
         }}
       >
@@ -30,7 +28,6 @@ const CurrInfoGuide = ({ setSelectedTag, selectedTag }) => {
           selectedTag === "appointments" && "bg-cyan-400"
         } font-bold rounded-3xl p-3 cursor-pointer w-full text-center hover:bg-cyan-400`}
         onClick={() => {
-          localStorage.setItem("tag", "appointments");
           setSelectedTag("appointments");
         }}
       >

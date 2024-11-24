@@ -17,6 +17,9 @@ const doctorSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: Number,
+      unique: [true, "Phone number already exists"],
+      minlength: 10,
+      maxlength: 10,
       required: [true, "Phone number is required"],
       unique: [true, "Phone number already exists"],
       match: [/^\d{10}$/, "Please enter a valid phone number"],
@@ -50,6 +53,11 @@ const doctorSchema = new mongoose.Schema(
     },
     fees: {
       type: Number,
+      required: true,
+    },
+    availability: {
+      type: [String],
+      default: [],
       required: true,
     },
     profilePhoto: {

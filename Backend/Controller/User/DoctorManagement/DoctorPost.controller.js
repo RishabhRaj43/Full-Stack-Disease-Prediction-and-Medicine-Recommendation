@@ -7,7 +7,7 @@ export const getDoctorPosts = async (req, res) => {
     const posts = await DoctorPost.find({})
       .populate("doctorId")
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(7);
 
     const userId = req.user._id;
     return res.status(200).json({ posts, userId });

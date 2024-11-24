@@ -35,14 +35,11 @@ const Navbar = () => {
             <Link to={""} className="hover:text-[#FFF7D1]">
               Home
             </Link>
-            <Link to={"search-doctors"} className="hover:text-[#FFF7D1]">
-              Search Doctors
-            </Link>
-            <Link to={"appointments"} className="hover:text-[#FFF7D1]">
-              Appointments
+            <Link to={"book-appointments"} className="hover:text-[#FFF7D1]">
+              Book Appointments
             </Link>
             <Link to={"user-info"}>
-              <img src={user?.profilePhoto} className="w-12 h-12" alt="" />
+              <img src={user?.profilePhoto} className="w-12 h-12 rounded-full" alt="" />
             </Link>
           </ul>
         </div>
