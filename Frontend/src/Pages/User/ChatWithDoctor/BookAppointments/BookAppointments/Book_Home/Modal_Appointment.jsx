@@ -143,6 +143,10 @@ const Modal_Appointment = ({ closeModal, userId, doctorInfo }) => {
                           </h3>
                           <h3 className="text-lg text-gray-800">
                             <span className="font-bold">Email :</span>{" "}
+                            {doctorInfo.email}
+                          </h3>
+                          <h3 className="text-lg text-gray-800">
+                            <span className="font-bold">Gender :</span>{" "}
                             {doctorInfo.gender.charAt(0).toUpperCase() +
                               doctorInfo.gender.slice(1).toLowerCase()}
                           </h3>
@@ -204,7 +208,7 @@ const Modal_Appointment = ({ closeModal, userId, doctorInfo }) => {
                       onClick={closeModal}
                       className="w-full py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 flex items-center justify-center gap-2 transition duration-200"
                     >
-                      Like
+                      {doctorInfo.likedBy.includes(userId) ? "Liked" : "Like"}
                       <img
                         className="w-6 h-6"
                         src={
