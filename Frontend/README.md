@@ -1,75 +1,170 @@
-# Backend API Calls
+# API Documentation
 
-## USER/DOCTOR AUTH ROUTES ✔️
+This document provides an overview of the backend API endpoints for both **Users** and **Doctors**, categorized by their functionality. The routes are well-structured and organized for clarity and ease of use.
 
-- Get Current User - [GET] /api/(user/doctor)/auth/current
-  **getCurrentUser()**
-- Create a new user - [POST] /api/(user/doctor)/auth/signup
-  **userSignup(username, email, password, gender, phoneNumber)**
-  **doctorSignup(username,email,password,gender,phoneNumber,specialization,experience,fees,)**
-- Login a user - [POST] /api/(user/doctor)/auth/login
-  **(user/doctor)Login(email, password)**
-- Update a user - [POST] /api/(user/doctor)/auth/update
-  **(user/doctor)Update(username, email, password, gender, phoneNumber)**
-- Logout a user - [POST] /api/(user/doctor)/auth/logout
-  **(user/doctor)Logout()**
-- Verification Code = [POST] /api/(user/doctor)/auth/verification-code
-- Verify Existing User = [POST] /api/(user/doctor)/auth/verify
-  **(user/doctor)Verify(emailId, verificationCode)**
+## Table of Contents
 
-## APPOINTMENT ROUTES FOR USER ✔️
+- [User/Doctor Authentication Routes](#userdoctor-authentication-routes)
+- [User Appointment Routes](#user-appointment-routes)
+- [Doctor Appointment Routes](#doctor-appointment-routes)
+- [Post Routes for Users](#post-routes-for-users)
+- [Post Routes for Doctors](#post-routes-for-doctors)
+- [Doctor Info Routes for Users](#doctor-info-routes-for-users)
+- [Prediction Routes](#prediction-routes)
+- [AI Routes](#ai-routes)
+- [App Middleware Structure](#app-middleware-structure)
 
-- Get all appointments - [GET] /api/user/appointment/get-all-appointments
-  **getAllAppointments()**
-- Create a new appointment - [POST] /api/user/appointment/create-appointment
-  **createAppointment(doctorId, date, time, status)**
-- Cancel an appointment - [POST] /api/user/appointment/cancel-appointment
-  **cancelAppointment(appointmentId)**
+---
 
-## APPOINTMENT ROUTES FOR DOCTOR ✔️
-- Get all appointments - [GET] /api/doctor/doctor-appointment/get-all-appointments
-  **getAllDoctorAppointments()**
+## User/Doctor Authentication Routes
 
-## POST ROUTES FOR USER ✔️
+### User Routes
+- **Get Current User**:  
+  `[GET] /api/user/auth/current`  
+  _getCurrentUser()_
 
-- Get all posts - [GET] /api/user/doctor-post
-  **getAllDoctorPosts()**
-- Like a post - [POST] /api/user/doctor-post/like-post
-  **likeDoctorPost(postId)**
-- Unike a post - [POST] /api/user/doctor-post/unlike-post
-  **dislikeDoctorPost(postId)**
-- Get Fav Post - [GET] /api/user/doctor-post/get-fav-posts
-  **getFavPost()**
+- **Signup**:  
+  `[POST] /api/user/auth/signup`  
+  _userSignup(username, email, password, gender, phoneNumber)_
 
-## DOCTOR ROUTES FOR USER ✔️
+- **Login**:  
+  `[POST] /api/user/auth/login`  
+  _userLogin(email, password)_
 
-- Like a Doctor - [POST] /api/user/doctor-info/like-doctor
-  **likeDoctor(doctorId)**
-- Unike a Doctor - [POST] /api/user/doctor-info/unlike-doctor
-  **unlikeDoctor(doctorId)**
+- **Update User Profile**:  
+  `[POST] /api/user/auth/update`  
+  _userUpdate(username, email, password, gender, phoneNumber)_
 
-## POST ROUTES FOR DOCTOR ✔️
+- **Logout**:  
+  `[POST] /api/user/auth/logout`  
+  _userLogout()_
 
-- Create a new post - [POST] /api/doctor/doctor-post/create-post
-  **createPost(title,content)**
-- Delete a post - [POST] /api/doctor/doctor-post/delete-post
-  **deletePost(postId)**
+- **Request Verification Code**:  
+  `[POST] /api/user/auth/verification-code`
 
-## DOCTOR INFO FOR USER ✔️
+- **Verify User**:  
+  `[POST] /api/user/auth/verify`  
+  _userVerify(emailId, verificationCode)_
 
-- Get most liked doctor - [GET] /api/doctor/doctor-info/get-most-liked-doctors
-  **getMostLikedDoctors()**
+---
 
-## PREDICTION ROUTES ✔️
+### Doctor Routes
+- **Get Current Doctor**:  
+  `[GET] /api/doctor/auth/current`  
+  _getCurrentDoctor()_
 
-- Get prediction - [POST] /api/predict
-  **predictDisease(checkItems)** <!-- It takes a array with 0/1 value -->
-- Get Disease Info - [POST] /api/get-disease
-  **getDiseaseInfo(disease)**
+- **Signup**:  
+  `[POST] /api/doctor/auth/signup`  
+  _doctorSignup(username, email, password, gender, phoneNumber, specialization, experience, fees)_
 
-## Chat Routes <!-- This will be added later -->
+- **Login**:  
+  `[POST] /api/doctor/auth/login`  
+  _doctorLogin(email, password)_
 
-## AI Routes ✔️
+- **Update Doctor Profile**:  
+  `[POST] /api/doctor/auth/update`  
+  _doctorUpdate(username, email, password, gender, phoneNumber)_
 
-- Generate Answer - [POST] /ai/chat
-  **chatWithAi(message)**
+- **Logout**:  
+  `[POST] /api/doctor/auth/logout`  
+  _doctorLogout()_
+
+- **Verify Doctor**:  
+  `[POST] /api/doctor/auth/verify`  
+  _doctorVerify(emailId, verificationCode)_
+
+---
+
+## User Appointment Routes
+
+- **Get All Appointments**:  
+  `[GET] /api/user/appointment/get-all-appointments`  
+  _getAllAppointments()_
+
+- **Create New Appointment**:  
+  `[POST] /api/user/appointment/create-appointment`  
+  _createAppointment(doctorId, date, time, status)_
+
+- **Cancel Appointment**:  
+  `[POST] /api/user/appointment/cancel-appointment`  
+  _cancelAppointment(appointmentId)_
+
+---
+
+## Doctor Appointment Routes
+
+- **Get All Doctor Appointments**:  
+  `[GET] /api/doctor/doctor-appointment/get-all-appointments`  
+  _getAllDoctorAppointments()_
+
+---
+
+## Post Routes for Users
+
+- **Get All Posts**:  
+  `[GET] /api/user/doctor-post`  
+  _getAllDoctorPosts()_
+
+- **Like a Post**:  
+  `[POST] /api/user/doctor-post/like-post`  
+  _likeDoctorPost(postId)_
+
+- **Unlike a Post**:  
+  `[POST] /api/user/doctor-post/unlike-post`  
+  _dislikeDoctorPost(postId)_
+
+- **Get Favorite Posts**:  
+  `[GET] /api/user/doctor-post/get-fav-posts`  
+  _getFavPost()_
+
+---
+
+## Post Routes for Doctors
+
+- **Create a New Post**:  
+  `[POST] /api/doctor/doctor-post/create-post`  
+  _createPost(title, content)_
+
+- **Delete a Post**:  
+  `[POST] /api/doctor/doctor-post/delete-post`  
+  _deletePost(postId)_
+
+---
+
+## Doctor Info Routes for Users
+
+- **Get Most Liked Doctors**:  
+  `[GET] /api/doctor/doctor-info/get-most-liked-doctors`  
+  _getMostLikedDoctors()_
+
+- **Like a Doctor**:  
+  `[POST] /api/user/doctor-info/like-doctor`  
+  _likeDoctor(doctorId)_
+
+- **Unlike a Doctor**:  
+  `[POST] /api/user/doctor-info/unlike-doctor`  
+  _unlikeDoctor(doctorId)_
+
+---
+
+## Prediction Routes
+
+- **Get Prediction**:  
+  `[POST] /api/predict`  
+  _predictDisease(checkItems)_  
+  *(Takes an array with 0/1 values as input)*
+
+- **Get Disease Information**:  
+  `[POST] /api/get-disease`  
+  _getDiseaseInfo(disease)_
+
+---
+
+## AI Routes
+
+- **Generate AI Answer**:  
+  `[POST] /ai/chat`  
+  _chatWithAi(message)_
+
+---
+
