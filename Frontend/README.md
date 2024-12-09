@@ -12,7 +12,6 @@ This document provides an overview of the backend API endpoints for both **Users
 - [Doctor Info Routes for Users](#doctor-info-routes-for-users)
 - [Prediction Routes](#prediction-routes)
 - [AI Routes](#ai-routes)
-- [App Middleware Structure](#app-middleware-structure)
 
 ---
 
