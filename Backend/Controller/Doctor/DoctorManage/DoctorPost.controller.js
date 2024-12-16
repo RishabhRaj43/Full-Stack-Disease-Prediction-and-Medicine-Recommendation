@@ -6,7 +6,7 @@ export const createDoctorPost = async (req, res) => {
 
     const newPost = new DoctorPost({
       doctorId: req.doctor._id,
-      title,
+      title,  
       content,
     });
 

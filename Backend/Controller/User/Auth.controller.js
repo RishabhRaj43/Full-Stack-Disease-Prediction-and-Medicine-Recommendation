@@ -68,7 +68,6 @@ export const verifyUser = async (req, res) => {
 
   try {
     const tempUser = tempUsers[email];
-    console.log(tempUser);
 
     if (!tempUser) {
       return res
@@ -102,7 +101,6 @@ export const verifyUser = async (req, res) => {
     await newUser.save();
 
     const token = jsonSetToken(newUser._id, res);
-    console.log("token", token);
 
     delete tempUsers[email];
 
@@ -163,7 +161,6 @@ export const userLogin = async (req, res) => {
     }
 
     const token = jsonSetToken(user._id, res);
-    console.log("token", token);
 
     return res.status(200).json({ token, message: "User Logged in" });
   } catch (error) {
@@ -174,11 +171,7 @@ export const userLogin = async (req, res) => {
 
 export const userLogout = async (req, res) => {
   try {
-    console.log(req.cookies);
-
     if (!req.cookies.token_user) {
-      // console.log("no token found");
-
       return res.status(400).json({ message: "No token found" });
     }
     res.clearCookie("token_user");
@@ -219,5 +212,14 @@ export const userUpdate = async (req, res) => {
       success: false,
       message: "An error occurred while updating user information",
     });
+  }
+};
+
+export const getCookie = async (req, res) => {
+  try {
+    return res.status(200).json({ cookie: req.cookies.token_user });
+  } catch (error) {
+    console.log("Error in getCookie: ", error);
+    return res.status(500).json({ message: "Error fetching cookie" });
   }
 };

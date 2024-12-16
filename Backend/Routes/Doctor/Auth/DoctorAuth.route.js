@@ -39,8 +39,6 @@ doctorAuthRoute.put(
 
 doctorAuthRoute.get("/info", doctorProtectRoute, getDoctor);
 
-// doctorAuthRoute.post("/verification-code", (req, res) => {});
-
 doctorAuthRoute.post("/verify", verifyDoctor);
 
 export default doctorAuthRoute;

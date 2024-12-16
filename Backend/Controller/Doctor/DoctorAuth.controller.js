@@ -271,18 +271,20 @@ export const updateDoctor = async (req, res) => {
     const specializationPromises = doctor.specialization.map(
       async (speciality) => {
         let specialization = await Specialization.findOne({
-          name: speciality.toLowerCase(),
+          name: speciality.toLowerCase().trim(),
         });
 
         if (!specialization) {
           const newSpecialization = new Specialization({
-            name: speciality.toLowerCase(),
+            name: speciality.toLowerCase().trim(),
           });
           await newSpecialization.save();
           specialization = newSpecialization;
         }
 
-        specialization.doctors.push(doctor._id);
+        if (!specialization.doctors.includes(doctor._id)) {
+          specialization.doctors.push(doctor._id);
+        }
         await specialization.save();
       }
     );

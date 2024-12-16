@@ -6,10 +6,11 @@ const jsonSetToken = (userid, res) => {
   });
 
   res.cookie("token_user", token, {
-    maxAge: 1000 * 60 * 60 * 24 * 15, // 15 day
+    maxAge: 1000 * 60 * 60 * 24 * 15,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
     secure: process.env.NODE_ENV === "production",
+    domain: process.env.NODE_ENV === "production" ? ".yourdomain.com" : ".localhost",
   });
 
   return token;
